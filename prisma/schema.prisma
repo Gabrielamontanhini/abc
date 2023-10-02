@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pratica_beneficio {
+  id         Int       @id @default(autoincrement())
+  id_pratica Int?
+  beneficio  String?
+  praticas   praticas? @relation(fields: [id_pratica], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model pratica_produto {
+  id         Int       @id @default(autoincrement())
+  id_produto Int?
+  id_pratica Int?
+}
+
+model praticas {
+  id                Int                 @id @default(autoincrement())
+  descricao         String?
+  pratica_beneficio pratica_beneficio[]
+}
+
+model produtos {
+  id               Int                @id @default(autoincrement())
+  nome_produto     String             @db.VarChar(255)
+}
+
+model usuario {
+  id               Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(255)
+  senha            String             @db.VarChar(255)
+}
+
+model usuario_produtos {
+  id         Int       @id @default(autoincrement())
+  id_usuario Int?
+  id_produto Int?
+}
