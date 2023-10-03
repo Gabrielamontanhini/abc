@@ -11,7 +11,6 @@ model pratica_beneficio {
   id         Int       @id @default(autoincrement())
   id_pratica Int?
   beneficio  String?
-  praticas   praticas? @relation(fields: [id_pratica], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model pratica_produto {
@@ -23,7 +22,6 @@ model pratica_produto {
 model praticas {
   id                Int                 @id @default(autoincrement())
   descricao         String?
-  pratica_beneficio pratica_beneficio[]
 }
 
 model produtos {
