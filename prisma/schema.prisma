@@ -7,36 +7,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model pratica_beneficio {
-  id         Int       @id @default(autoincrement())
-  id_pratica Int?
-  beneficio  String?
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique @db.VarChar(32)
+  password    String        @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  profile     Profile?
+  userProduct UserProduct[]
+
+  @@map("users")
 }
 
-model pratica_produto {
-  id         Int       @id @default(autoincrement())
-  id_produto Int?
-  id_pratica Int?
+model Profile {
+  id          Int      @id @default(autoincrement())
+  nickname    String   @unique @db.VarChar(16)
+  fullname    String   @db.VarChar(32)
+  bio         String?  @db.VarChar(128)
+  description String?  @db.VarChar(255)
+  birthday    DateTime @db.Date()
+  avatarUrl   String? // FIXME: need to changed by file and default image
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+
+  @@map("profiles")
 }
 
-model praticas {
+model Product {
+  id              Int               @id @default(autoincrement())
+  name            String
+  userProduct     UserProduct[]
+  PracticeProduct PracticeProduct[]
+
+  @@map("products")
+}
+
+model UserProduct {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  @@unique([userId, productId], name: "userId_productId")
+  @@map("userProducts")
+}
+
+model Practice {
   id                Int                 @id @default(autoincrement())
-  descricao         String?
+  description       String
+  practiceAdventage PracticeAdventage[]
+  practiceProduct   PracticeProduct[]
+
+  @@map("practices")
 }
 
-model produtos {
-  id               Int                @id @default(autoincrement())
-  nome_produto     String             @db.VarChar(255)
+model PracticeAdventage {
+  id         Int      @id @default(autoincrement())
+  practiceId Int
+  practice   Practice @relation(fields: [practiceId], references: [id])
+  adventage  String?
+
+  @@map("practiceAdventages")
 }
 
-model usuario {
-  id               Int                @id @default(autoincrement())
-  nome             String             @db.VarChar(255)
-  senha            String             @db.VarChar(255)
-}
+model PracticeProduct {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  practiceId Int
+  practice   Practice @relation(fields: [practiceId], references: [id])
 
-model usuario_produtos {
-  id         Int       @id @default(autoincrement())
-  id_usuario Int?
-  id_produto Int?
+  @@map("practiceProducts")
 }
