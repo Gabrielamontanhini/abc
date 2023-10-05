@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { AuthUser, UserProfileInput, UpdateUser } from "@/protocols/user.protocols";
+import { AuthUser, CreateUserProfile, UpdateUser } from "@/protocols/user.protocols";
 import authService from "@/services/auth.services";
 import httpStatus from "http-status";
 import customErrors from "@/errors/customErrors";
 
 export async function signUp(req: Request, res: Response): Promise<void> {
-    const profile = req.body as UserProfileInput;
+    const profile = req.body as CreateUserProfile;
     if (!profile) throw customErrors.unprocessableEntity("profile");
 
     await authService.signUp(profile);
@@ -14,9 +14,9 @@ export async function signUp(req: Request, res: Response): Promise<void> {
 
 export async function signIn(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body as AuthUser;
-    const { token, userProfileInput } = await authService.signIn(email, password);
+    const { token, playerUserProfile } = await authService.signIn(email, password);
 
-    res.send({ token, userProfileInput });
+    res.send({ token, playerUserProfile });
 }
 
 export async function update(req: Request, res: Response): Promise<void> {

@@ -3,16 +3,13 @@ import { LIMIT } from "@/utils/constants.utils";
 import { Profile } from "@prisma/client";
 import { UpdateProfile } from "@/protocols/profile.protocols";
 
+
 export function readById(id: number): Promise<Profile | null> {
     return prisma.profile.findUnique({ where: { id } });
 }
 
-export function update(id: number, profile: UpdateProfile): Promise<Profile> {
-    const { fullname, description, avatarUrl, birthday } = profile;
-    return prisma.profile.update({
-        data: { fullname, description, avatarUrl, birthday },
-        where: { id }
-    });
+export function update(id: number, data: UpdateProfile): Promise<Profile> {
+    return prisma.profile.update({ data, where: { id } });
 }
 
 export function deleteById(id: number): Promise<Profile> {

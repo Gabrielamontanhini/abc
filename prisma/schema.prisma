@@ -8,9 +8,10 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique @db.VarChar(32)
-  password    String        @db.VarChar(255)
+  id       Int    @id @default(autoincrement())
+  email    String @unique @db.VarChar(32)
+  password String @db.VarChar(255)
+
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   profile     Profile?
@@ -27,37 +28,41 @@ model Profile {
   description String?  @db.VarChar(255)
   birthday    DateTime @db.Date()
   avatarUrl   String? // FIXME: need to changed by file and default image
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
+
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("profiles")
 }
 
 model Product {
-  id              Int               @id @default(autoincrement())
-  name            String
+  id   Int    @id @default(autoincrement())
+  name String
+
   userProduct     UserProduct[]
-  PracticeProduct PracticeProduct[]
+  practiceProduct PracticeProduct[]
 
   @@map("products")
 }
 
 model UserProduct {
-  id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
+  id        Int @id @default(autoincrement())
   userId    Int
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId], name: "userId_productId")
   @@map("userProducts")
 }
 
 model Practice {
-  id                Int                 @id @default(autoincrement())
-  description       String
+  id          Int    @id @default(autoincrement())
+  description String
+
   practiceAdventage PracticeAdventage[]
   practiceProduct   PracticeProduct[]
 
@@ -65,20 +70,22 @@ model Practice {
 }
 
 model PracticeAdventage {
-  id         Int      @id @default(autoincrement())
-  practiceId Int
-  practice   Practice @relation(fields: [practiceId], references: [id])
+  id         Int     @id @default(autoincrement())
   adventage  String?
+  practiceId Int
+
+  practice Practice @relation(fields: [practiceId], references: [id])
 
   @@map("practiceAdventages")
 }
 
 model PracticeProduct {
-  id         Int      @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
   productId  Int
-  product    Product  @relation(fields: [productId], references: [id])
   practiceId Int
-  practice   Practice @relation(fields: [practiceId], references: [id])
+
+  product  Product  @relation(fields: [productId], references: [id])
+  practice Practice @relation(fields: [practiceId], references: [id])
 
   @@map("practiceProducts")
 }
