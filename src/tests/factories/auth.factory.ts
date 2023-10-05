@@ -1,5 +1,5 @@
 import prisma from "@/database/db.connection";
-import { UserProfileInput } from "@/protocols/user.protocols";
+import { CreateUserProfile } from "@/protocols/user.protocols";
 import { faker } from "@faker-js/faker";
 
 function build(
@@ -23,7 +23,7 @@ function build(
     });
 }
 
-function random(): UserProfileInput {
+function random(): CreateUserProfile {
     return {
         nickname: faker.person.firstName(),
         fullname: faker.person.fullName(),

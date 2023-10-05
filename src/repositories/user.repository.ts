@@ -1,10 +1,11 @@
 import prisma from "@/database/db.connection";
-import { UserProfileInput } from "@/protocols/user.protocols";
+import { CreateUserProfile } from "@/protocols/user.protocols";
 import { LIMIT } from "@/utils/constants.utils";
 import { User } from "@prisma/client";
 
-function create(userProfileInput: UserProfileInput) {
-    const { email, password, ...profile } = userProfileInput;
+
+function create(CreateUserProfile: CreateUserProfile) {
+    const { email, password, ...profile } = CreateUserProfile;
     return prisma.user.create({
         data: {
             email, password,
@@ -31,7 +32,7 @@ function update(id: number, email: string, password: string): Promise<User> {
     });
 }
 
-export function findByNickOrEmail(nickname: string, email: string) {
+export function readByNickOrEmail(nickname: string, email: string) {
     return prisma.user.findFirst({
         where: { OR: [{ email }, { profile: { nickname } }] },
         select: {
@@ -43,14 +44,14 @@ export function findByNickOrEmail(nickname: string, email: string) {
     });
 }
 
-export function find(nickname: string, email: string) {
+export function find(email: string) {
     return prisma.user.findMany({
         select: { email: true },
         where: {
-                email: {
-                    contains: email || undefined,
-                    mode: "insensitive"
-                }
+            email: {
+                contains: email || undefined,
+                mode: "insensitive"
+            }
         },
         orderBy: { email: "asc" },
         take: LIMIT
@@ -58,5 +59,5 @@ export function find(nickname: string, email: string) {
 }
 
 export const userRepository = {
-    create, readByEmail, readById, update, findByNickOrEmail, find
+    create, readByEmail, readById, update, readByNickOrEmail, find
 }

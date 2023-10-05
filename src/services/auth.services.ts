@@ -1,18 +1,21 @@
-import { User } from "@prisma/client";
-import { UserProfileInput } from "@/protocols/user.protocols";
+import { JWT_EXPIRATION_TIME } from "@/utils/constants.utils";
+import { CreateUserProfile } from "@/protocols/user.protocols";
 import { userRepository } from "@/repositories/user.repository";
+import { User } from "@prisma/client";
 import customErrors from "@/errors/customErrors";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import dotenv from "dotenv";
 
+dotenv.config();
 dayjs.extend(customParseFormat);
 
 
-export async function signUp(userProfileInput: UserProfileInput): Promise<User> {
-    const { nickname, email, password, birthday } = userProfileInput as UserProfileInput;
-    const result = await userRepository.findByNickOrEmail(nickname, email);
+export async function signUp(createUserProfile: CreateUserProfile): Promise<User> {
+    const { nickname, email, password, birthday } = createUserProfile;
+    const result = await userRepository.readByNickOrEmail(nickname, email);
 
     if (result != null) {
         const keyValues: KeyValues = {
@@ -22,26 +25,26 @@ export async function signUp(userProfileInput: UserProfileInput): Promise<User> 
         throw customErrors.conflict(generateErrorMessage(keyValues, nickname, email));
     }
     const hash = bcrypt.hashSync(password, 10);
-    userProfileInput.password = hash;
-    userProfileInput.birthday = new Date(dayjs(birthday, "DD-MM-YYYY").toString());
+    createUserProfile.password = hash;
+    createUserProfile.birthday = new Date(dayjs(birthday, "DD-MM-YYYY").toString()); // FIXME
 
-    return userRepository.create(userProfileInput);
+    return userRepository.create(createUserProfile);
 }
 
 export async function signIn(email: string, password: string) {
-    const userProfileInput = await userRepository.readByEmail(email);
+    const createUserProfile = await userRepository.readByEmail(email);
 
-    if (userProfileInput == null) throw customErrors.notFound("email");
-    if (!bcrypt.compareSync(password, userProfileInput.password)) {
+    if (createUserProfile == null) throw customErrors.notFound("email");
+    if (!bcrypt.compareSync(password, createUserProfile.password)) {
         throw customErrors.unauthorized("password");
     }
-    const { password: _password, ...playerUserProfile } = userProfileInput;
+    const { password: _password, ...playerUserProfile } = createUserProfile;
     const token = jwt.sign(
-        { id: userProfileInput.id },
-        process.env.JWT_SECRET || process.env.SECRET_KEY || "test",
-        { expiresIn: 24 * 60 * 60 * 7 }
+        { id: createUserProfile.id },
+        process.env.JWT_SECRET as string,
+        { expiresIn: JWT_EXPIRATION_TIME }
     );
-    return { token, userProfileInput: playerUserProfile };
+    return { token, playerUserProfile };
 }
 
 export async function update(id: number, email: string, password: string, newPassword: string | null) {
@@ -52,11 +55,10 @@ export async function update(id: number, email: string, password: string, newPas
         throw customErrors.unauthorized("password");
     }
     if (user.email !== email) {
-        const otherUser: User | null = await userRepository.readByEmail(email);
+        const otherUser = await userRepository.readByEmail(email) as User | null;
 
         if (otherUser != null) throw customErrors.conflict("email");
     }
-
     let hash = user.password;
     if (typeof newPassword === "string" && !bcrypt.compareSync(newPassword, user.password)) {
         hash = bcrypt.hashSync(newPassword, 10);
@@ -65,8 +67,8 @@ export async function update(id: number, email: string, password: string, newPas
     return result;
 }
 
-export function find(nick: string, email: string) {
-    return userRepository.find(nick, email);
+export function find(email: string) {
+    return userRepository.find(email);
 }
 
 const authService = {
@@ -75,13 +77,14 @@ const authService = {
 export default authService;
 
 
-type KeyValues = {
+type KeyValues = { // FIXME: move to ?
     email: string | undefined,
     nickname: string | undefined
 }
+
+// FIXME: move to ?
 function generateErrorMessage(result: KeyValues, nickname: string, email: string): string {
     const entities = [];
-    console.log(result)
     if (result.nickname === nickname) entities.push("nickname");
     if (result.email === email) entities.push("email");
 
