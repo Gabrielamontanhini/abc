@@ -8,7 +8,7 @@
     "test:load-envs": "dotenv -e .env.test",
     "test": "npm run test:load-envs jest --runInBand",
     "test:coverage": "npm run test:load-envs -- jest -- --coverage -i",
-    "dev:load-envs": "ditenv -e .env.development",
+    "dev:load-envs": "dotenv -e .env.development",
     "migrate:test": "npm run test:load-envs prisma migrate deploy",
     "migrate:run": "prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev",

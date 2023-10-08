@@ -1,16 +1,27 @@
 import { Router } from "express";
-// import {
-//     controllerDeleteProductById,
-//     controllerEditProductById,
-//     controllerGetProducts,
-//     controllerPostProduct
-// } from "@/controllers/products.controller";
+import {
+  createProduct,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+} from "@/controllers/products.controllers";
+import { validateBody, validateParams } from "@/middlewares/validateSchema";
+import { productBody, productParams } from "@/schemas/products.schemas";
 
-const productsRouter = Router()
+const productRouter = Router();
 
-// productsRouter.post("/", controllerPostProduct) //opstar produto
-// productsRouter.get("/", controllerGetProducts)
-// productsRouter.put("/:productId", controllerEditProductById)
-// productsRouter.delete("/:productId", controllerDeleteProductById)
+productRouter.post("/", validateBody(productBody), createProduct);
+productRouter.get("/", getProduct);
+productRouter.put(
+  "/:practiceId",
+  validateBody(productBody),
+  validateParams(productParams),
+  updateProduct
+);
+productRouter.delete(
+  "/:practiceId",
+  validateParams(productParams),
+  deleteProduct
+);
 
-export default productsRouter
+export default productRouter;

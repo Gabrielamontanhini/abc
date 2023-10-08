@@ -3,39 +3,41 @@ import { LIMIT } from "@/utils/constants.utils";
 import { Profile } from "@prisma/client";
 import { UpdateProfile } from "@/protocols/profile.protocols";
 
-
 export function readById(id: number): Promise<Profile | null> {
-    return prisma.profile.findUnique({ where: { id } });
+  return prisma.profile.findUnique({ where: { id } });
 }
 
 export function update(id: number, data: UpdateProfile): Promise<Profile> {
-    return prisma.profile.update({ data, where: { id } });
+  return prisma.profile.update({ data, where: { id } });
 }
 
 export function deleteById(id: number): Promise<Profile> {
-    return prisma.profile.delete({ where: { id } });
+  return prisma.profile.delete({ where: { id } });
 }
 
 export function count(): Promise<number> {
-    return prisma.profile.count();
+  return prisma.profile.count();
 }
 
-export function find(nickname: string) {
-    return prisma.profile.findMany({
-        select: { nickname: true },
-        where: {
-            nickname: {
-                contains: nickname || undefined,
-                mode: "insensitive"
-            }
-        },
-        orderBy: { nickname: "asc" },
-        take: LIMIT
-    });
+export function find(nickName: string) {
+  return prisma.profile.findMany({
+    select: { nickName: true },
+    where: {
+      nickName: {
+        contains: nickName || undefined,
+        mode: "insensitive",
+      },
+    },
+    orderBy: { nickName: "asc" },
+    take: LIMIT,
+  });
 }
 
 const profileRepository = {
-    readById, find,
-    update, deleteById, count
+  readById,
+  find,
+  update,
+  deleteById,
+  count,
 };
 export default profileRepository;

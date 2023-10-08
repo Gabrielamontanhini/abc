@@ -1,13 +1,17 @@
 import { Router } from "express";
-import { userSchema, updateUserSchema, userProfileSchema } from "@/schemas/user.schemas";
+import {
+  userSchema,
+  updateUserSchema,
+  userProfileSchema,
+} from "@/schemas/user.schemas";
 import { signIn, signUp, update } from "@/controllers/auth.controllers";
-import validateSchema from "@/middlewares/validateSchema";
+import { validateBody } from "@/middlewares/validateSchema";
 import validateAuth from "@/middlewares/validateAuth";
 
 const router = Router();
 router
-    .post("/sign-up", validateSchema(userProfileSchema), signUp)
-    .post("/sign-in", validateSchema(userSchema), signIn)
-    .put("/", validateAuth, validateSchema(updateUserSchema), update);
+  .post("/sign-up", validateBody(userProfileSchema), signUp)
+  .post("/sign-in", validateBody(userSchema), signIn)
+  .put("/", validateAuth, validateBody(updateUserSchema), update);
 
 export default router;
