@@ -10,17 +10,15 @@
     "rootDirs": ["src", "tests"],
     "baseUrl": "src",
     "paths": {
-      "@/*": [
-        "*"
-      ]
-    },
+      "@/*": ["*"]
+    }
   },
   "plugins": [
     {
       "transform": "typescript-transform-paths"
     }
   ],
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "tests"],
   "ts-node": {
     "esm": true
   }

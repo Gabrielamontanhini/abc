@@ -22,8 +22,8 @@ model User {
 
 model Profile {
   id          Int      @id @default(autoincrement())
-  nickname    String   @unique @db.VarChar(16)
-  fullname    String   @db.VarChar(32)
+  nickName    String   @unique @db.VarChar(16)
+  fullName    String   @db.VarChar(32)
   bio         String?  @db.VarChar(128)
   description String?  @db.VarChar(255)
   birthday    DateTime @db.Date()
