@@ -13,7 +13,7 @@ export async function update(id: number, profile: UpdateProfile) {
   profile.birthday = new Date(dayjs(profile.birthday, "DD-MM-YYYY").toString()); // FIXME
   const updatedProfile = await profileRepository.update(id, profile);
 
-  if (updatedProfile == null) throw customErrors.conflict("nickname or email");
+  if (updatedProfile == null) throw customErrors.conflict("nickName or email");
   return updatedProfile;
 }
 
