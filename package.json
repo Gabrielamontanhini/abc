@@ -2,7 +2,7 @@
   "name": "poc-testes-unitarios",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc && tsc-alias",
     "test:load-envs": "dotenv -e .env.test",
