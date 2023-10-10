@@ -16,7 +16,7 @@
     "seed:test": "npm run test:load-envs prisma db seed",
     "seed": "prisma db seed",
     "dev": "nodemon src/server.ts",
-    "start": "npm run seed && node dist/server.js"
+    "start": "node dist/server.js"
   },
   "author": "422UR4H",
   "license": "ISC",
