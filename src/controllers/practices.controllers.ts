@@ -5,8 +5,8 @@ import { PracticeCreateInput } from "@/repositories/practices.repository";
 import { PracticeParams } from "@/protocols/practice.protocols";
 
 export async function createPractices(req: Request, res: Response) {
-  const { description } = req.body as PracticeCreateInput;
-  const result = await practiceServices.createPractice(description);
+  const { name } = req.body as PracticeCreateInput;
+  const result = await practiceServices.createPractice(name);
   return res.status(httpStatus.OK).send(result);
 }
 
@@ -17,10 +17,10 @@ export async function getPractices(req: Request, res: Response) {
 
 export async function updatePractice(req: Request, res: Response) {
   const { practiceId } = req.params as PracticeParams;
-  const { description } = req.body as PracticeCreateInput;
+  const { name } = req.body as PracticeCreateInput;
   const result = await practiceServices.updatePractice(
     Number(practiceId),
-    description
+    name
   );
   return res.status(httpStatus.OK).send(result);
 }

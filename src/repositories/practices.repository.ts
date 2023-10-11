@@ -15,7 +15,7 @@ async function updatePractice(data: Practice): Promise<Practice> {
   return prisma.practice.update({
     where: { id: data.id },
     data: {
-      description: data.description,
+      name: data.name,
     },
   });
 }
