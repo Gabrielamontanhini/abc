@@ -46,8 +46,7 @@ export async function signIn(email: string, password: string) {
   const { password: _password, ...playerUserProfile } = createUserProfile;
   const token = jwt.sign(
     { id: createUserProfile.id },
-    process.env.JWT_SECRET as string,
-    { expiresIn: JWT_EXPIRATION_TIME }
+    process.env.JWT_SECRET as string
   );
   return { token, playerUserProfile };
 }
