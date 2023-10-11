@@ -73,11 +73,11 @@ model PracticeAdvantage {
   id          Int    @id @default(autoincrement())
   advantage   String @db.VarChar()
   description String @db.VarChar()
-  practiceId  Int
+  practiceId  Int    @unique
 
   practice Practice @relation(fields: [practiceId], references: [id])
 
-  @@map("practiceAdventages")
+  @@map("practiceAdvantages")
 }
 
 model PracticeProduct {

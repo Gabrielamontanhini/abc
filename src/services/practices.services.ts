@@ -12,6 +12,18 @@ export async function updatePractice(id: number, name: string) {
   return await practiceRepository.updatePractice({ id, name });
 }
 
+export async function upsertPracticeAdvantage(
+  advantage: string,
+  description: string,
+  practiceId: number
+) {
+  return await practiceRepository.upsertPracticeAdvantage(
+    advantage,
+    description,
+    practiceId
+  );
+}
+
 export async function deletePractice(practiceId: number) {
   return await practiceRepository.deletePractice(practiceId);
 }
@@ -20,5 +32,6 @@ export const practiceServices = {
   createPractice,
   getPractice,
   updatePractice,
+  upsertPracticeAdvantage,
   deletePractice,
 };

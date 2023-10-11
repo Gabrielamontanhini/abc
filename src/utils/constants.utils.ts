@@ -58,7 +58,7 @@ export const practicesData = [
       "Preserva a biodiversidade e garante a disponibilidade contínua do açaí e do dendê.",
     description:
       "Realiza a colheita seletiva de frutos, evitando danos às palmeiras.",
-    products: [1, 5, 11],
+    products: [3, 10],
   },
   {
     name: "Cultivo Consorciado com Leguminosas",

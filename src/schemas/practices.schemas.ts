@@ -1,5 +1,8 @@
 import Joi from "joi";
-import { PracticeCreateInput } from "@/repositories/practices.repository";
+import {
+  PracticeCreateInput,
+  PracticeUpsert,
+} from "@/repositories/practices.repository";
 import { PracticeParams } from "@/protocols/practice.protocols";
 
 export const practiceBody = Joi.object<PracticeCreateInput>({
@@ -8,4 +11,9 @@ export const practiceBody = Joi.object<PracticeCreateInput>({
 
 export const practiceParams = Joi.object<PracticeParams>({
   practiceId: Joi.number().required(),
+});
+
+export const practiceAdvantageBody = Joi.object<PracticeUpsert>({
+  advantage: Joi.string().required(),
+  description: Joi.string().required(),
 });

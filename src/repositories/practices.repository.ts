@@ -1,5 +1,5 @@
 import prisma from "@/database/db.connection";
-import { Practice } from "@prisma/client";
+import { Practice, PracticeAdvantage } from "@prisma/client";
 
 async function createPractice(data: PracticeCreateInput): Promise<Practice> {
   return prisma.practice.create({
@@ -20,15 +20,30 @@ async function updatePractice(data: Practice): Promise<Practice> {
   });
 }
 
+async function upsertPracticeAdvantage(
+  advantage: string,
+  description: string,
+  practiceId: number
+) {
+  return await prisma.practiceAdvantage.upsert({
+    where: { practiceId },
+    create: { advantage, description, practiceId },
+    update: { advantage, description },
+  });
+}
+
 async function deletePractice(practiceId: number) {
   return prisma.practice.delete({ where: { id: practiceId } });
 }
 
 export type PracticeCreateInput = Omit<Practice, "id">;
 
+export type PracticeUpsert = Omit<PracticeAdvantage, "id" | "practiceId">;
+
 export const practiceRepository = {
   createPractice,
   getPractice,
   updatePractice,
+  upsertPracticeAdvantage,
   deletePractice,
 };

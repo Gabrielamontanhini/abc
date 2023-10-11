@@ -15,6 +15,14 @@ export async function getProduct(req: Request, res: Response) {
   return res.status(httpStatus.OK).send(result);
 }
 
+export async function getProductByIdAndPractice(req: Request, res: Response) {
+  const { productId } = req.params as ProductParams;
+  const result = await productsServices.getProductByIdAndPractice(
+    Number(productId)
+  );
+  return res.status(httpStatus.OK).send(result);
+}
+
 export async function updateProduct(req: Request, res: Response) {
   const { productId } = req.params as ProductParams;
   const { name } = req.body as ProductCreateInput;

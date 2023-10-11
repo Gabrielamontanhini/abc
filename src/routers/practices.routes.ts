@@ -4,24 +4,32 @@ import {
   getPractices,
   updatePractice,
   deletePractice,
+  upsertPracticeAdvantage,
 } from "@/controllers/practices.controllers";
 import { validateBody, validateParams } from "@/middlewares/validateSchema";
-import { practiceBody, practiceParams } from "@/schemas/practices.schemas";
+import {
+  practiceAdvantageBody,
+  practiceBody,
+  practiceParams,
+} from "@/schemas/practices.schemas";
 
 const practiceRouter = Router();
 
-practiceRouter.post("/", validateBody(practiceBody), createPractices);
-practiceRouter.get("/", getPractices);
-practiceRouter.put(
-  "/:practiceId",
-  validateBody(practiceBody),
-  validateParams(practiceParams),
-  updatePractice
-);
-practiceRouter.delete(
-  "/:practiceId",
-  validateParams(practiceParams),
-  deletePractice
-);
+practiceRouter
+  .post("/", validateBody(practiceBody), createPractices)
+  .post(
+    "/advantage/:practiceId",
+    validateParams(practiceParams),
+    validateBody(practiceAdvantageBody),
+    upsertPracticeAdvantage
+  )
+  .get("/", getPractices)
+  .put(
+    "/:practiceId",
+    validateBody(practiceBody),
+    validateParams(practiceParams),
+    updatePractice
+  )
+  .delete("/:practiceId", validateParams(practiceParams), deletePractice);
 
 export default practiceRouter;

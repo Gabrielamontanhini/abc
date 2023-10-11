@@ -8,6 +8,10 @@ export async function getProduct() {
   return await productRepository.getProduct();
 }
 
+export async function getProductByIdAndPractice(productId: number) {
+  return await productRepository.getProductByIdAndPractice(productId);
+}
+
 export async function updateProduct(id: number, name: string) {
   return await productRepository.updateProduct({ id, name });
 }
@@ -19,6 +23,7 @@ export async function deleteProduct(productId: number) {
 export const productsServices = {
   createProduct,
   getProduct,
+  getProductByIdAndPractice,
   updateProduct,
   deleteProduct,
 };
