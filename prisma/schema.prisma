@@ -9,10 +9,9 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique @db.VarChar(32)
-  password String @db.VarChar(255)
-
+  id          Int           @id @default(autoincrement())
+  email       String        @unique @db.VarChar(32)
+  password    String        @db.VarChar(255)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   profile     Profile?
@@ -61,19 +60,20 @@ model UserProduct {
 }
 
 model Practice {
-  id          Int    @id @default(autoincrement())
-  description String
+  id   Int    @id @default(autoincrement())
+  name String
 
-  practiceAdventage PracticeAdventage[]
+  practiceAdvantage PracticeAdvantage[]
   practiceProduct   PracticeProduct[]
 
   @@map("practices")
 }
 
-model PracticeAdventage {
-  id         Int     @id @default(autoincrement())
-  adventage  String?
-  practiceId Int
+model PracticeAdvantage {
+  id          Int    @id @default(autoincrement())
+  advantage   String @db.VarChar()
+  description String @db.VarChar()
+  practiceId  Int
 
   practice Practice @relation(fields: [practiceId], references: [id])
 
